@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo</title>
+</head>
+
+<body style="background-color: white;">
+
+    <canvas id="canvas" width="20" height="20" style="border: 10px solid #000000;
+    height: 500px; width: 500px;image-rendering: pixelated; display: block; margin-left: auto; margin-right: auto; margin-top: 100px; margin-bottom: auto; background-color: white;"></canvas>
+    
+    <div>PONTOS: </div>
+
+    <script>
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+
+
+        var jogador1 = {
+            x: 9,
+            y: 9,
+            pontos: 1
+        }
+        var inimigos = []
+
+        function adicionarInimigo() {
+            if (inimigos.length < 30) {
+                inimigos.push({
+                    x: Math.floor(Math.random() * (20 - 0)),
+                    y: Math.floor(Math.random() * (20 - 0))
+                })
+                desenharJogo();
+            }
+        }
+        setInterval(adicionarInimigo, 5)
+
+        setInterval(autoPerseguir, 100)
+
+        function autoPerseguir() {
+            if (inimigos.length > 0) {
+                const inimigo = retornarInimigoMaisProximo();
+                const evento = verificarDirecao(inimigo);
+                movePlayer(evento)
+            }
+        }
+
+        function verificarDirecao(inimigo) {
+            var evento= {}
+            if (jogador1.x > inimigo.x) {
+                evento.key = 'ArrowLeft'
+            } else if (jogador1.x < inimigo.x) {
+                evento.key = 'ArrowRight'
+            } else if (jogador1.y > inimigo.y) {
+                evento.key = 'ArrowUp'
+            } else if (jogador1.y < inimigo.y) {
+                evento.key = 'ArrowDown'
+            }
+            return evento;
+        }
+
+        function retornarInimigoMaisProximo(jogador) {
+            var inimigoSelecionado = inimigos[0];
+            for (let i = 1; i < inimigos.length; i++) {
+                const inimigoAtual = inimigos[i]
+                var distanciaSelecionado = calcularDistancia(jogador1, inimigoSelecionado);
+                var distanciaAtual = calcularDistancia(jogador1, inimigoAtual);
+
+                if (distanciaSelecionado > distanciaAtual)
+                    inimigoSelecionado = inimigoAtual;
+            }
+            return inimigoSelecionado;
+        }
+
+        function calcularDistancia(jogador, inimigo) {
+            var distancia = 0;
+            if (jogador.x > inimigo.x) {
+                distancia = jogador.x - inimigo.x
+            } else {
+                distancia = inimigo.x - jogador.x
+            }
+            if (jogador.y > inimigo.y) {
+                distancia = distancia + (jogador.y - inimigo.y)
+            } else {
+                distancia = distancia + (inimigo.y - jogador.y)
+            }
+            return distancia
+
+        }
+
+        function desenharJogador() {
+            ctx.fillStyle = `black`
+            ctx.fillRect(jogador1.x, jogador1.y, 1, 1);
+        }
+        function desenharInimigo(inimigo) {
+            ctx.fillStyle = `red`
+            ctx.fillRect(inimigo.x, inimigo.y, 1, 1);
+        }
+        function limparTela() {
+            ctx.clearRect(0, 0, 20, 20);
+        }
+        function checarColisao() {
+            for (let i = 0; i < inimigos.length; i++) {
+                if ((jogador1.x == inimigos[i].x) && (jogador1.y == inimigos[i].y)) {
+                    inimigos.splice(i, 1);
+                    jogador1.pontos = jogador1.pontos + 1;
+                }
+            }
+        }
+        function desenharJogo() {
+            limparTela();
+            for (let i = 0; i < inimigos.length; i++) {
+                desenharInimigo(inimigos[i]);
+            }
+            desenharJogador();
+
+        }
+
+        document.addEventListener('keydown', movePlayer);
+
+        function movePlayer(event) {
+            if (event.key == 'ArrowLeft') {
+                if (jogador1.x > 0) {
+                    jogador1.x = jogador1.x - 1;
+                } else {
+                    jogador1.x = 19;
+                }
+            }
+            if (event.key == 'ArrowRight') {
+                if (jogador1.x < 19) {
+                    jogador1.x = jogador1.x + 1;
+                }else {
+                    jogador1.x = 0;
+                }
+            }
+            if (event.key == 'ArrowUp') {
+                if (jogador1.y > 0) {
+                    jogador1.y = jogador1.y - 1;
+                } else {
+                    jogador1.y = 19;
+                }
+            }
+            if (event.key == 'ArrowDown') {
+                if (jogador1.y < 19) {
+                    jogador1.y = jogador1.y + 1;
+                } else {
+                    jogador1.y = 0;
+                }
+            }
+            checarColisao();
+            desenharJogo();
+        }
+
+    </script>
+
+</body>
+
+</html>

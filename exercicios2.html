@@ -1,0 +1,25 @@
+<html>
+    <body>
+        <title>Temperatura</title>
+        <script>
+            function fahrenheit() {
+                var celcius = 0;
+                var fahrenheit = 0;
+                celcius = prompt('Quantidade Celcius');
+                fahrenheit = ((celcius * 1.8) + 32);
+                alert(`a quantidade é ${fahrenheit}`);
+            }
+            fahrenheit()
+
+            function celcius() {
+                var celcius = 0;
+                var fahrenheit = 0;
+                fahrenheit = prompt('Quantidade fahrenheit');
+                celcius = ((fahrenheit - 32) / 1.8);
+                alert(`a quantidade é ${celcius}`);
+            }
+            celcius()
+    
+        </script>
+    </body>
+</html>

@@ -1,0 +1,21 @@
+<html>
+    <body>
+        <h1>Calulo da Área</h1>
+        <p>
+            <button onclick="area(1)">Circulo</button>
+        </p>
+        <p id="resposta"></p>
+        <script type="text/javascript">
+
+            function area(param) {
+                var area, raio, mensagem;
+                if (param == 1 ) {
+                    raio = parseInt(window.prompt("Informe o raio: "));
+                    area = raio * raio * 3.14159;
+                    mensagem = "Área do circulo com raio " + raio +  " é " + area + ".";
+                }
+                document.getElementById("resposta").innerHTML = mensagem;
+            }
+        </script>
+    </body>
+</html>
